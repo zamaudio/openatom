@@ -137,7 +137,7 @@ static void put_pixel(void *fb, uint16_t x, uint16_t y, uint32_t color)
 
 extern struct logoman libreradeon_logo;
 
-static void localtest(void)
+static void kalindi_localtest(void)
 {
 	size_t y;
 	void *fb = map_fb();
@@ -146,18 +146,18 @@ static void localtest(void)
 	fb_magic.size = fb_magic.bytes_per_line * fb_magic.y_resolution;
 
 	if (0) {
-		aruba_backlight_control(NULL, 200, 254);
+		kalindi_backlight_control(NULL, 200, 254);
 		if (1)
-			aruba_backlight_blon(NULL);
+			kalindi_backlight_blon(NULL);
 		else
-			aruba_backlight_bloff(NULL);
+			kalindi_backlight_bloff(NULL);
 	}
 
 	/*
 	 * FUS_MC_VM_FB_OFFSET -- location of RAM framebuffer in 4 MiB units
-	 * aruba_read(NULL, 0x2068);
+	 * kalindi_read(NULL, 0x2068);
 	 */
-	//aruba_read(NULL, 0x2068);
+	//kalindi_read(NULL, 0x2068);
 
 	memset(fb, 0, fb_magic.size);
 
@@ -312,12 +312,14 @@ int main(int argc, char *argv[])
 	}
 
 	if (config.do_haxorz_stuff) {
-		localtest();
+		kalindi_localtest();
+		//localtest();
 	}
 
 	if (config.run_init) {
 		if (config.run_asic_init)
-			aruba_asic_init(NULL);
+			kalindi_asic_init(NULL);
+			//aruba_asic_init(NULL);
 		execute_master_plan(NULL);
 	}
 

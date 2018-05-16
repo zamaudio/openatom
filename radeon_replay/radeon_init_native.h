@@ -1,7 +1,8 @@
 #ifndef __RADEON_INIT_NATIVE_H
 #define __RADEON_INIT_NATIVE_H
 
-#include <aruba/aruba.h>
+//#include <aruba/aruba.h>
+#include <kalindi/kalindi.h>
 
 struct logoman {
 	size_t width;

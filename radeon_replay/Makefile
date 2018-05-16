@@ -1,7 +1,7 @@
 TARGET=radeon_replay
 all: $(TARGET)
 
-include aruba/Makefile.inc
+include kalindi/Makefile.inc
 include external_encoders/Makefile.inc
 
 SRCS=radeon_replay.c \
@@ -17,8 +17,8 @@ SRCS=radeon_replay.c \
 
 OBJS = $(sort ${SRCS:.c=.o})
 
-MODULES = aruba external_encoders
-LIBS=$(sort ${MODULES:%=lib%.a})
+MODULES = kalindi external_encoders
+LIBS=${MODULES:%=lib%.a}
 VPATH=$(MODULES)
 
 CFLAGS += -Wall -g3 -I$(shell pwd)
@@ -28,7 +28,7 @@ SCP := scp
 $(TARGET): $(OBJS) $(LIBS)
 	$(CC) $(LIBS) $^ -o $@
 
-clean: clean-aruba clean-external_encoders
+clean: clean-kalindi clean-external_encoders
 	-$(RM) $(OBJS) $(TARGET)
 
 install:

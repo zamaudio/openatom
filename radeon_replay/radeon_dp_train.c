@@ -1,4 +1,5 @@
-#include "aruba/aruba.h"
+//#include "aruba/aruba.h"
+#include "kalindi/kalindi.h"
 
 #include "drm_dp_helper.h"
 
