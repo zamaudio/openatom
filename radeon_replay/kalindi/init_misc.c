@@ -4,7 +4,7 @@
 #include "kalindi.h"
 #include "linux_glue.h"
 
-void dynamic_clock_gating_init_hp_1035dx(struct radeon_device *rdev)
+void dynamic_clock_gating_init_a68n_5200(struct radeon_device *rdev)
 {
 	radeon_write(rdev, 0x0c68, 0x66666666);
 	radeon_write(rdev, 0x0c74, 0x002bc666);

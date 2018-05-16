@@ -86,7 +86,7 @@ void kalindi_set_encoder_crtc_source(struct radeon_device *rdev,
 				   uint8_t encoder_mode);
 
 /* init_misc.c */
-void dynamic_clock_gating_init_hp_1035dx(struct radeon_device *rdev);
+void dynamic_clock_gating_init_a68n_5200(struct radeon_device *rdev);
 
 /* misc.c */
 uint32_t kalindi_get_block_offest(uint8_t block_id);

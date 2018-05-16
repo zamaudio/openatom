@@ -37,7 +37,7 @@ static const struct big_ass_init_constants {
 };
 
 static const struct big_ass_init_constants *gpu = & gpu_init_stuff;
-const uint32_t kalindi_on_hp_1035dx_vco_freq;
+const uint32_t kalindi_on_a68n_5200_vco_freq;
 
 // command_table  0000e3d0  #38  (ReadHWAssistedI2CStatus/HPDInterruptService):
 //
