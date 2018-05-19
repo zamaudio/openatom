@@ -65,7 +65,9 @@ void kalindi_asic_init(struct radeon_device *rdev)
 
 	fprintf(stderr, "\t/* asic_registers_init */\n");
 	asic_registers_init(rdev);
-	//dynamic_clock_gating_init_a68n_5200(rdev); XXX probably from crtc functions 
+
+	fprintf(stderr, "\t/* dynamic_clock_gating_init */\n");
+	dynamic_clock_gating_init_a68n_5200(rdev);
 
 	for (crtc_id = 0; crtc_id < 2; crtc_id++) {
 		kalindi_powergate_crtc(rdev, 0, crtc_id);

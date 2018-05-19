@@ -37,7 +37,7 @@ static const struct big_ass_init_constants {
 };
 
 static const struct big_ass_init_constants *gpu = & gpu_init_stuff;
-const uint32_t kalindi_on_a68n_5200_vco_freq;
+const uint32_t kalindi_on_a68n_5200_vco_freq = 0x02;
 
 // command_table  0000e3d0  #38  (ReadHWAssistedI2CStatus/HPDInterruptService):
 //
@@ -115,8 +115,8 @@ void execute_master_plan(struct radeon_device * rdev)
 	/* > Some scratch reg shit we're skipping <*/
 
 	/* This bit is part of UNIPHY transmitter init. What does it do? */
-	fprintf(stderr, "\t/* transmitter_init */\n");
-	kalindi_backlight_init(rdev, CONNECTOR_OBJECT_ID_LVDS);
+	fprintf(stderr, "\t/* skipping transmitter_init */\n");
+	//kalindi_backlight_init(rdev, CONNECTOR_OBJECT_ID_LVDS);
 
 	fprintf(stderr, "\t/* hpd_interrupt_status */\n");
 	kalindi_hpd_interrupt_status(rdev, 0);
