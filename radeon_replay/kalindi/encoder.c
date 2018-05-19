@@ -80,7 +80,7 @@ void kalindi_encoder_setup_dp(struct radeon_device *rdev, uint8_t id,
 	uint32_t pixel_clock = pixel_clock_khz / 10;
 	dp_link_rate /= 10;
 
-	off = kalindi_get_block_offest(id);
+	off = kalindi_get_block_offset(id);
 	//   004b: CLEAR  reg[1c83]  [XXXX]
 	radeon_write(rdev, 0x720c + off, 0);
 	//   0056: MOVE   reg[1c03]  [..XX]  <-  001f
@@ -135,7 +135,7 @@ void kalindi_encoder_setup_dp(struct radeon_device *rdev, uint8_t id,
 	//   00e8: AND    param[01]  [...X]  <-  07
 	source_crtc_id &= 7;
 	//   00ec: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
-	off = kalindi_get_block_offest(source_crtc_id);
+	off = kalindi_get_block_offset(source_crtc_id);
 	//   00ee: SHIFT_LEFT  cfg->ucLaneNum  by  04
 	//   00f2: MOVE   reg[1b9c]  [.X..]  <-  cfg->ucLaneNum
 	radeon_mask(rdev, 0x6e70 + off, 0xff << 16, lane_num << 20); // FIXME: bitmap last
@@ -147,7 +147,7 @@ void kalindi_encoder_setup_dp(struct radeon_device *rdev, uint8_t id,
 void kalindi_encoder_setup_other(struct radeon_device *rdev, uint8_t id,
 			       uint8_t mode, uint8_t lane_num)
 {
-	uint32_t off = kalindi_get_block_offest(id);
+	uint32_t off = kalindi_get_block_offset(id);
 
 	//   004b: CLEAR  reg[1c83]  [XXXX]
 	radeon_write(rdev, 0x720c + off, 0);
@@ -237,7 +237,7 @@ void kalindi_encoder_setup_other(struct radeon_device *rdev, uint8_t id,
 void kalindi_encoder_setup_panel_mode(struct radeon_device *rdev,
 				    uint8_t encoder_id, uint8_t panel_mode)
 {
-	uint32_t off = kalindi_get_block_offest(encoder_id);
+	uint32_t off = kalindi_get_block_offset(encoder_id);
 	//   01b2: OR     reg[1cd5]  [...X]  <-  10
 	radeon_mask(rdev, 0x7354 + off, 0, 0x10);
 	//   01b7: MOVE   reg[1cde]  [...X]  <-  param[01]  [...X]
@@ -246,7 +246,7 @@ void kalindi_encoder_setup_panel_mode(struct radeon_device *rdev,
 
 void kalindi_encoder_video_on(struct radeon_device *rdev, uint8_t encoder_id)
 {
-	const uint32_t off = kalindi_get_block_offest(encoder_id);
+	const uint32_t off = kalindi_get_block_offset(encoder_id);
 	//   0199: OR     reg[1cc9]  [..X.]  <-  01
 	radeon_mask(rdev, 0x7324 + off, 0, 1 << 8);
 	//   019e: DELAY_MicroSec  0a
@@ -264,7 +264,7 @@ void kalindi_encoder_video_on(struct radeon_device *rdev, uint8_t encoder_id)
 void kalindi_encoder_video_off(struct radeon_device *rdev, uint8_t encoder_id)
 {
 	uint32_t off;
-	off = kalindi_get_block_offest(encoder_id);
+	off = kalindi_get_block_offset(encoder_id);
 	//   0189: CLEAR  reg[1cc3]  [..XX]
 	radeon_mask(rdev, CTL_VIDEO + off, 0xffff, 0);
 	//   018d: DELAY_MicroSec  c8
@@ -279,7 +279,7 @@ void kalindi_encoder_link_training_start(struct radeon_device *rdev,
 				       uint8_t encoder_id)
 {
 	uint32_t off;
-	off = kalindi_get_block_offest(encoder_id);
+	off = kalindi_get_block_offset(encoder_id);
 	//   0179: AND    reg[1cc0]  [...X]  <-  ef
 	radeon_mask(rdev, 0x7300 + off, BIT(4), 0);
 }
@@ -288,7 +288,7 @@ void kalindi_encoder_link_training_pattern(struct radeon_device *rdev,
 				       uint8_t encoder_id, uint8_t pattern)
 {
 	uint32_t off;
-	off = kalindi_get_block_offest(encoder_id);
+	off = kalindi_get_block_offset(encoder_id);
 	//   0162: CLEAR  reg[1cd1]  [...X]
 	radeon_mask(rdev, 0x7344 + off, 0xff, pattern - 1);
 }
@@ -297,7 +297,7 @@ void kalindi_encoder_link_training_finish(struct radeon_device *rdev,
 				       uint8_t encoder_id)
 {
 	uint32_t off;
-	off = kalindi_get_block_offest(encoder_id);
+	off = kalindi_get_block_offset(encoder_id);
 	//   0181: OR     reg[1cc0]  [...X]  <-  10
 	radeon_mask(rdev, 0x7300 + off, 0, BIT(4));
 }
@@ -371,7 +371,7 @@ void kalindi_set_encoder_crtc_source(struct radeon_device *rdev,
 		//   003f: MOVE   save  <-  crtc_id
 
 		//   0055: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
-		off = kalindi_get_block_offest(dig_encoder_id_to_index(encoder_id));
+		off = kalindi_get_block_offset(dig_encoder_id_to_index(encoder_id));
 		//   0057: MASK   reg[1c00]  [...X]  &  f8  |  save
 		radeon_mask(rdev, 0x7000 + off, 0x7, crtc_id);
 
@@ -380,7 +380,7 @@ void kalindi_set_encoder_crtc_source(struct radeon_device *rdev,
 		if (encoder_mode != ATOM_ENCODER_MODE_LVDS)
 			break;
 		//   0068: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
-		off = kalindi_get_block_offest(crtc_id);
+		off = kalindi_get_block_offset(crtc_id);
 		//   006a: CLEAR  reg[1bf2]  [XXXX]
 		radeon_write(rdev, BIT_DEPTH_CTL + off, 0);
 		//   006e: SET_DATA_BLOCK  06  (LVDS_Info)
@@ -412,7 +412,7 @@ void kalindi_set_encoder_crtc_source(struct radeon_device *rdev,
 		goto l_less_common;
 	}
 	//   00b2: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
-	off = kalindi_get_block_offest(crtc_id & 0x7) << 2;
+	off = kalindi_get_block_offset(crtc_id & 0x7) << 2;
 	//   00b4: CLEAR  reg[1bf2]  [XXXX]
 	radeon_write(rdev, BIT_DEPTH_CTL + off, 0);
  l_less_common:

@@ -12,7 +12,7 @@
  *
  * There is no bounds check. It is the caller's job to pass a valid block_id.
  */
-uint32_t kalindi_get_block_offest(uint8_t block_id)
+uint32_t kalindi_get_block_offset(uint8_t block_id)
 {
 	static const uint32_t blocks[] = {
 		0, 0xc00, 0x9800, 0xa400, 0xb000, 0xbc00 };
@@ -54,7 +54,7 @@ void kalindi_powergate_crtc(struct radeon_device *rdev, uint8_t crtc_id,
 
 	radeon_mask(rdev, 0xbe8 + (crtc_id << 2), 0xffff, BIT(1));
 
-	block = kalindi_get_block_offest(crtc_id);
+	block = kalindi_get_block_offset(crtc_id);
 	radeon_mask(rdev, 0x6ef8 + block, 0xff, BIT(1));
 	radeon_mask(rdev, 0x6b00 + block, BIT(24), BIT(25));
 	radeon_mask(rdev, 0x6a44 + block, 0xff, 0x11);
@@ -71,7 +71,7 @@ void kalindi_scaler_setup(struct radeon_device *rdev, uint8_t crtc_id,
 			enum radeon_rmx_type rmx_type)
 {
 	uint8_t reg_val = 0;
-	const uint32_t block = kalindi_get_block_offest(crtc_id);
+	const uint32_t block = kalindi_get_block_offset(crtc_id);
 
 	radeon_mask(rdev, 0x6b00 + block, BIT(0), 0);
 	radeon_mask(rdev, 0x6d44 + block, 0, BIT(16));

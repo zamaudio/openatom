@@ -89,7 +89,7 @@ void kalindi_set_encoder_crtc_source(struct radeon_device *rdev,
 void dynamic_clock_gating_init_a68n_5200(struct radeon_device *rdev);
 
 /* misc.c */
-uint32_t kalindi_get_block_offest(uint8_t block_id);
+uint32_t kalindi_get_block_offset(uint8_t block_id);
 void kalindi_powergate_crtc(struct radeon_device *rdev, uint8_t crtc_id,
 			  bool enable);
 void kalindi_scaler_setup(struct radeon_device *rdev, uint8_t crtc_id,

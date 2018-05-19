@@ -158,7 +158,7 @@ static uint16_t get_uniphy_reg_offset(uint8_t huge, uint8_t tits)
 
 void kalindi_disable_grph_srfc(struct radeon_device *rdev, uint8_t surf)
 {
-	uint32_t regptr = kalindi_get_block_offest(surf) >> 2;
+	uint32_t regptr = kalindi_get_block_offset(surf) >> 2;
 	radeon_mask(rdev, (0x1a00 + regptr) << 2, 0xff, 0);
 	if ((radeon_read(rdev, 0x00fc << 2) & 0xff) != surf)
 		return;
@@ -252,7 +252,7 @@ void kalindi_enable_grph_srfc(struct radeon_device *rdev, uint8_t surf, uint8_t 
 	//   00eb: ADD    WS_REMIND/HI32 [XXXX]  <-  reg[00c8]  [XXXX]
 	//   00f0: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
 	off = regptr << 2;
-	regptr = kalindi_get_block_offest(surf) >> 2;
+	regptr = kalindi_get_block_offset(surf) >> 2;
 	//   00f2: MOVE   reg[1a07]  [...X]  <-  WS_QUOT/LOW32 [.X..]
 	radeon_mask(rdev, (0x1a07 + regptr) << 2, 0xff, qfuck);
 	//   00f7: MOVE   reg[1a08]  [...X]  <-  WS_QUOT/LOW32 [.X..]
@@ -326,7 +326,7 @@ void kalindi_enable_grph_srfc(struct radeon_device *rdev, uint8_t surf, uint8_t 
 	return;
  do_enable_shit:
 	//   017b: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
-	regptr = kalindi_get_block_offest(surf) >> 2;
+	regptr = kalindi_get_block_offset(surf) >> 2;
 	//   017d: COMP   param[02]  [..X.]  <-  00
 	//   0181: JUMP_NotEqual  0198
 	if (enable == 0) {
@@ -453,7 +453,7 @@ void kalindi_fuck_my_lute(struct radeon_device *rdev, uint8_t lute_id)
 	uint32_t regptr;
 	//   0006: SET_ATI_PORT  0000  (INDIRECT_IO_MM)
 	//   0009: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
-	regptr = kalindi_get_block_offest(lute_id) >> 2;
+	regptr = kalindi_get_block_offset(lute_id) >> 2;
 	//   000b: CLEAR  reg[1a78]  [...X]
 	radeon_mask(rdev, (0x1a78 + regptr) << 2, 0xff, 0);
 	//   000f: CLEAR  reg[1a80]  [XXXX]

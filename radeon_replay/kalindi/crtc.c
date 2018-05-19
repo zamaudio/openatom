@@ -53,7 +53,7 @@
 
 static int disable_crtc(struct radeon_device *rdev, uint8_t crtc_id)
 {
-	const uint32_t block = kalindi_get_block_offest(crtc_id);
+	const uint32_t block = kalindi_get_block_offset(crtc_id);
 	radeon_mask(rdev, CRTC_CONTROL + block, 0, 0x300);
 	radeon_mask(rdev, CRTC_CONTROL + block, CRTC_MASTER_EN, 0);
 	if (radeon_wait_clear(rdev, CRTC_CONTROL + block, BIT(16), 1000) < 0) {
@@ -67,7 +67,7 @@ static int disable_crtc(struct radeon_device *rdev, uint8_t crtc_id)
 
 static void enable_crtc(struct radeon_device *rdev, uint8_t crtc_id)
 {
-	const uint32_t off = kalindi_get_block_offest(crtc_id);
+	const uint32_t off = kalindi_get_block_offset(crtc_id);
 	radeon_mask(rdev, CRTC_1b7c + off, 0, BIT(31));
 	radeon_mask(rdev, CRTC_CONTROL + off, 0, CRTC_MASTER_EN);
 }
@@ -86,7 +86,7 @@ int kalindi_update_crtc_x2_buf(struct radeon_device *rdev,
 			     uint8_t crtc_id, bool enable)
 {
 	int ret;
-	const uint32_t block = kalindi_get_block_offest(crtc_id);
+	const uint32_t block = kalindi_get_block_offset(crtc_id);
 
 	radeon_mask(rdev, CRTC_1bb6 + block, BIT(8), 0);
 
@@ -110,11 +110,12 @@ int kalindi_update_crtc_x2_buf(struct radeon_device *rdev,
 
 }
 
+
 int kalindi_blank_crtc(struct radeon_device *rdev, uint8_t crtc_id, bool enable)
 {
 	int ret;
 	uint32_t setmask;
-	uint32_t block = kalindi_get_block_offest(crtc_id);
+	uint32_t block = kalindi_get_block_offset(crtc_id);
 
 	radeon_mask(rdev, CRTC_BLANK_CONTROL + block, 0xff << 16, 0);
 
@@ -156,7 +157,7 @@ void kalindi_set_crtc_dtd_timing(struct radeon_device *rdev, uint8_t crtc_id,
 	uint8_t r8;
 	uint16_t val16;
 	uint32_t reg32;
-	const uint32_t block = kalindi_get_block_offest(crtc_id);
+	const uint32_t block = kalindi_get_block_offset(crtc_id);
 
 	val16 = mode->crtc_hblank_end - 1;
 	radeon_mask(rdev, CRTC_H_BLANK_END + block, 0xffff, val16);
@@ -192,7 +193,7 @@ void kalindi_overscan_setup(struct radeon_device *rdev, uint8_t crtc_id,
 			  uint8_t h_border, uint8_t v_border)
 {
 	uint32_t reg32;
-	uint32_t block = kalindi_get_block_offest(crtc_id);
+	uint32_t block = kalindi_get_block_offset(crtc_id);
 
 	reg32 = (h_border << 16) | h_border;
 	radeon_write(rdev, CRTC_H_OVERSCAN + block, reg32);

@@ -556,7 +556,7 @@ void kalindi_transmitter_enable(struct radeon_device *rdev, enum encoder_phy eph
 	DRM_ERROR("\t/* may_the_enable_magic_begin */\n");
 	//   00cf: MOVE   cfg->ucDigEncoderSel  <-  ucPhyId
 	//   00d3: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
-	off = kalindi_get_block_offest(phy_id);
+	off = kalindi_get_block_offset(phy_id);
 	//   00d5: MOVE   reg[1c50]  [..X.]  <-  WS_FB_WIN [...X]
 	radeon_mask(rdev, 0x7140 + off, 0xff << 8, src_encoder_id << 8);
 	//   00da: MOVE   reg[1c50]  [.X..]  <-  phy_mode
@@ -974,7 +974,7 @@ void kalindi_transmitter_enable(struct radeon_device *rdev, enum encoder_phy eph
 	radeon_mask(rdev, 0x580  + off, 0, 1);
 	//   04d3: MOVE   cfg->ucDigEncoderSel  <-  ucPhyId
 	//   04d7: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
-	off = kalindi_get_block_offest(phy_id);
+	off = kalindi_get_block_offset(phy_id);
 	//   04d9: OR     reg[1c51]  [...X]  <-  01
 	radeon_mask(rdev, 0x7144 + off, 0, BIT(0));
 	//   04de: DELAY_MicroSec  0a

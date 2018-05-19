@@ -428,7 +428,7 @@ void kalindi_set_pixel_clock(struct radeon_device *rdev, enum pll_ids pll_id,
 			hdmi_clk_div |= 0xffff;
 		//   02b9: MOVE   param[00]  [...X]  <-  param[00]  [X...]
 		//   02bd: CALL_TABLE  14  (ASIC_StaticPwrMgtStatusChange/SetUniphyInstance)
-		off = kalindi_get_block_offest(crtc_id);
+		off = kalindi_get_block_offset(crtc_id);
 		//   02bf: MOVE   reg[1b30]  [..XX]  <-  WS_QUOT/LOW32 [..XX]
 		radeon_mask(rdev, 0x6cc0 + off, 0xffff, hdmi_clk_div & 0xffff);
 		//   02c4: SET_REG_BLOCK  0000
