@@ -20,6 +20,9 @@
 #define VGA_MEMORY_BASE_ADDRESS               0x310
 #define VGA_MEMORY_BASE_ADDRESS_HIGH          0x324
 
+#define ASIC_INT_DAC1_ENCODER_ID 0
+#define ATOM_ENCODER_MODE_CRT 15
+
 #define TIMED_OUT(str) \
 	do {						\
 		DRM_ERROR("Timed out on %s", str);	\
@@ -103,7 +106,17 @@ void set_video_mode_motherfucker(struct radeon_device *rdev, struct edid *edid);
 void execute_master_plan(struct radeon_device * rdev)
 {
 	int ret;
-	uint8_t edid_raw[256];
+	uint8_t edid_raw[256] = {
+		0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x4c, 0x2d, 0xcd, 0x08, 0x33, 0x45, 0x55, 0x5a,
+		0x25, 0x16, 0x01, 0x03, 0x0e, 0x35, 0x1e, 0x78, 0x2a, 0xba, 0x41, 0xa1, 0x59, 0x55, 0x9d, 0x28,
+		0x0d, 0x50, 0x54, 0xbf, 0xef, 0x80, 0x71, 0x4f, 0x81, 0xc0, 0x81, 0x00, 0x81, 0x80, 0x95, 0x00,
+		0xa9, 0xc0, 0xb3, 0x00, 0x01, 0x01, 0x02, 0x3a, 0x80, 0x18, 0x71, 0x38, 0x2d, 0x40, 0x58, 0x2c,
+		0x45, 0x00, 0x13, 0x2b, 0x21, 0x00, 0x00, 0x1e, 0x00, 0x00, 0x00, 0xfd, 0x00, 0x38, 0x4b, 0x1e,
+		0x51, 0x11, 0x00, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x00, 0x00, 0x00, 0xfc, 0x00, 0x53,
+		0x32, 0x34, 0x42, 0x33, 0x30, 0x30, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x00, 0x00, 0x00, 0xff,
+		0x00, 0x48, 0x54, 0x51, 0x43, 0x39, 0x30, 0x30, 0x39, 0x37, 0x36, 0x0a, 0x20, 0x20, 0x00, 0x45
+	};
+
 	struct edid edid;
 	if (rdev == NULL)
 		rdev = my_aux.parent;
@@ -121,12 +134,13 @@ void execute_master_plan(struct radeon_device * rdev)
 	fprintf(stderr, "\t/* hpd_interrupt_status */\n");
 	kalindi_hpd_interrupt_status(rdev, 0);
 
-	fprintf(stderr, "\t/* EDID read */\n");
-	ret = radeon_read_dp_aux_i2c(0, 0x50, edid_raw, 0, 128);
-	if (ret < 0) {
-		printf("Sorry. Could not get an EDID. Aborting this shit\n");
-		return;
-	}
+	// FIXME: Hardcoded EDID
+	fprintf(stderr, "\t/* skip EDID read (use hardcoded one) */\n");
+	//ret = radeon_read_dp_aux_i2c(0, 0x50, edid_raw, 0, 128);
+	//if (ret < 0) {
+	//	printf("Sorry. Could not get an EDID. Aborting this shit\n");
+	//	return;
+	//}
 
 	ret = decode_edid(edid_raw, sizeof(edid_raw), &edid);
 	if (ret < 0) {
@@ -157,12 +171,11 @@ void execute_master_plan(struct radeon_device * rdev)
 	struct radeon_panel_timings *t;
 	t = (1) ? &timings_real : &timings_nowait;
 	//kalindi_lcd_bloff(rdev);
-	fprintf(stderr, "\t/* brightness_control */\n");
-	kalindi_backlight_control(rdev, 200, 255);
-	fprintf(stderr, "\t/* brightness_control done */\n");
-	fprintf(stderr, "\t/* travis_init */\n");
-	travis_init(rdev, t);
-	fprintf(stderr, "\t/* travis should now work */\n");
+	fprintf(stderr, "\t/* skip brightness_control */\n");
+	//kalindi_backlight_control(rdev, 200, 255);
+	//fprintf(stderr, "\t/* travis_init */\n");
+	//travis_init(rdev, t);
+	//fprintf(stderr, "\t/* travis should now work */\n");
 
 	//vga_pre_c1();
 
@@ -288,11 +301,12 @@ void set_video_mode_motherfucker(struct radeon_device *rdev, struct edid *edid)
 
 	memset(&mode, 0, sizeof(mode));
 
-	err = drm_dp_dpcd_read(&my_aux, DP_DPCD_REV, dpcd, sizeof(dpcd));
-	if (err < 0) {
-		DRM_ERROR("Could not probe DP link via AUX. Abortioning");
-		return;
-	}
+	// Forget DisplayPort
+	//err = drm_dp_dpcd_read(&my_aux, DP_DPCD_REV, dpcd, sizeof(dpcd));
+	//if (err < 0) {
+	//	DRM_ERROR("Could not probe DP link via AUX. Abortioning");
+	//	return;
+	//}
 
 	fprintf(stderr, "void replay_int10_c3(void)\t// vbe_set_mode()\n{\n");
 	//c3_mambojumbo();
@@ -336,16 +350,16 @@ void set_video_mode_motherfucker(struct radeon_device *rdev, struct edid *edid)
 	if (kalindi_update_crtc_x2_buf(rdev, my_crtc, false))
 		TIMED_OUT("c2 buf again");
 	fprintf(stderr, "\t/* set_encoder_crtc_source */\n");
-	kalindi_set_encoder_crtc_source(rdev, my_crtc, 0xc, 1);
+	kalindi_set_encoder_crtc_source(rdev, my_crtc, ASIC_INT_DAC1_ENCODER_ID, ATOM_ENCODER_MODE_CRT);
 	kalindi_encoder_video_off(rdev, my_enc);	// <- VBIOS doesn't do this
-	fprintf(stderr, "\t/* encoder_setup_dp */\n");
-	kalindi_encoder_setup_dp(rdev, my_enc, edid->pixel_clock, 1, my_bpc, dp_rate);
+	fprintf(stderr, "\t/* encoder_setup_other */\n");
+	kalindi_encoder_setup_other(rdev, my_enc, ATOM_ENCODER_MODE_CRT, 1);
 	fprintf(stderr, "\t/* encoder_setup_panel_mode */\n");
 	kalindi_encoder_setup_panel_mode(rdev, my_enc, 0x1);
 
 	fprintf(stderr, "\t/* transmitter_enable */\n");
 	kalindi_transmitter_enable(rdev, my_phy, my_lane_count, dp_rate, my_pll,
-			       0, 0x10, my_hpd + 1, 0);
+			       TRANSMITTER_MODE_DVI, 0x10, my_hpd + 1, 0);
 
 
 
@@ -361,8 +375,8 @@ void set_video_mode_motherfucker(struct radeon_device *rdev, struct edid *edid)
 		.max_link_rate = 540000,
 		.update_drive_strength = &xmit_drive,
 	};
-	fprintf(stderr, "\t/* quick_link_training */\n");
-	radeon_dp_link_train(rdev, &enc, &xmit, dpcd);
+	//fprintf(stderr, "\t/* quick_link_training */\n");
+	//radeon_dp_link_train(rdev, &enc, &xmit, dpcd);
 
 	/* OK, this is it. We should  have something by now */
 	kalindi_encoder_video_on(rdev, my_enc);
