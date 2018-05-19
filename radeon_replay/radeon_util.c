@@ -50,19 +50,19 @@ void radeon_reg_mask(uint32_t reg, uint32_t clrbits, uint32_t setbits)
 static void sync_read_op(void)
 {
 	vga_enable_read();
-	inl(0x204c);
+	inl(0x104c);
 }
 
 static uint32_t radeon_read_op_pio(uint32_t reg_addr)
 {
-	outl(reg_addr, 0x2000);
-	return inl(0x2004);
+	outl(reg_addr, 0x1000);
+	return inl(0x1004);
 }
 
 static void radeon_write_op_pio(uint32_t reg_addr, uint32_t value)
 {
-	outl(reg_addr, 0x2000);
-	outl(value, 0x2004);
+	outl(reg_addr, 0x1000);
+	outl(value, 0x1004);
 }
 
 static void *mmio_base = NULL;
@@ -97,7 +97,7 @@ void radeon_init_mmio(void)
 		return;
 	}
 
-	mmio_base = mmap(0, 0x40000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0xf0380000);
+	mmio_base = mmap(0, 0x40000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0xf0800000);
 	if (mmio_base == MAP_FAILED) {
 		mmio_base = NULL;
 		fprintf(stderr, "mmap() failed %s\n", strerror(errno));

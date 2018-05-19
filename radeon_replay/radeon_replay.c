@@ -41,7 +41,7 @@ void dump_array(const uint8_t * what, size_t len)
 
 static struct lb_framebuffer fb_magic = {
 	.size = 0,
-	.physical_address = 0x5f000000,
+	.physical_address = 0xe0000000,
 	.x_resolution = 1366,
 	.y_resolution = 768,
 	.bytes_per_line = 0,
@@ -221,6 +221,10 @@ static void parse_options(int argc, char *argv[], struct global_cfg *config)
 			config->need_io_perm = true;
 			config->run_replay = true;
 			break;
+		case 'a':
+			config->need_io_perm = true;
+			config->run_asic_init = true;
+			break;
 		case 'i':
 			config->need_io_perm = true;
 			config->run_init = true;
@@ -268,7 +272,7 @@ int main(int argc, char *argv[])
 	radeon_init_mmio();
 
 	if (config.need_io_perm) {
-		if (ioperm(0x2000, 0x2000, 1) || ioperm(0x300, 0x100, 1)) {
+		if (ioperm(0x1000, 0x2000, 1) || ioperm(0x300, 0x100, 1)) {
 			printf("No IO permissions. Are we root?\n");
 			return EXIT_FAILURE;
 		}
