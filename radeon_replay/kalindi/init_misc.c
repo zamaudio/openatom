@@ -9,7 +9,7 @@ void dynamic_clock_gating_init_a68n_5200(struct radeon_device *rdev)
 	radeon_write(rdev, 0x0c68, 0x06186186);
 	radeon_write(rdev, 0x0c74, 0x06186186);
 	radeon_write(rdev, 0x0c44, 0x002bc006);
-	radeon_mask(rdev, 0x0bd8, 0x9fff08ff, 0x2000f404);
+	radeon_mask(rdev, 0x0bd8, 0x6000f700, 0x2000f404);
 	radeon_write(rdev, 0x0be4, 0x00025161);
 	radeon_write(rdev, 0x0c50, 0x10009000);
 	radeon_mask(rdev, 0x0be0, 0xff0000, 0x40000);
